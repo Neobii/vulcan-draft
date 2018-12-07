@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'neobii:vulcan-draft',
+  name: 'neobii:vulcan-draft-core',
 });
 
 Package.onUse(function (api) {

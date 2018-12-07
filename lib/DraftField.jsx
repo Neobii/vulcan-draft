@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Components, registerComponent } from 'meteor/vulcan:core';
 import { convertToRaw, convertFromRaw, Editor, EditorState } from 'draft-js';
@@ -15,7 +15,23 @@ const emptyContentState = convertFromRaw({
   ],
 });
 
-class SmartFormDraft extends Component {
+SmartFormDraftWrapper = props => {
+  const { label } = props;
+  return (
+    <React.Fragment>
+      <div class="form-group row">
+        <label class="control-label col-sm-3">{label}</label>
+        <div class="col-sm-9">
+          <div class="form-control">
+            <SmartFormDraftField props={{...props}}/>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  )
+}
+
+class SmartFormDraftField extends Component {
   constructor(props) {
     super(props);
     if(props.value || props.prefilledValue) {
@@ -51,10 +67,8 @@ class SmartFormDraft extends Component {
   }
 
   render() {
-    const { name } = this.props;
     return (
       <div onClick={this.focusEditor}>
-        <h3>{name}:</h3>
         <Editor
           ref={this.setEditor}
           editorState={this.state.editorState}
@@ -66,10 +80,12 @@ class SmartFormDraft extends Component {
   }
 }
 
-SmartFormDraft.contextTypes = {
+SmartFormDraftField.contextTypes = {
   updateCurrentValues: PropTypes.func,
   //prefilledValue: PropTypes.any,
   //value: PropTypes.any,
 };
 
-registerComponent('SmartFormDraft', SmartFormDraft);
+registerComponent('SmartFormDraft', SmartFormDraftWrapper);
+
+registerComponent("SmartFormDraftField", SmartFormDraftField);
